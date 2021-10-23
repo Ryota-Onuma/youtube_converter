@@ -1,11 +1,11 @@
 package main
 
 import (
-  "log"
   "net/http"
   "github.com/labstack/echo/v4"
   "github.com/labstack/echo/v4/middleware"
 
+  "youtube_converter/download"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 
   // Routes
   e.GET("/health_check", health_check)
-  e.POST("/mp3_converter", mp3_converter)
+  e.POST("/mp4_converter", mp4_converter)
 
   // Static
   e.Static("/", "./templates/index.html")
@@ -27,19 +27,13 @@ func main() {
   e.Logger.Fatal(e.Start(":3000"))
 }
 
-// Handler
 func health_check(c echo.Context) error {
   return c.String(http.StatusOK, "OK")
 }
 
 
-
-func mp3_converter(c echo.Context) error{
-  url := c.FormValue("url")
-
-  log.Print("----------")
-  log.Print(url)
-  log.Print("----------")
-
-  return c.String(http.StatusOK, url)
+func mp4_converter(c echo.Context) error{
+  youtube_url := c.FormValue("youtube_url")
+  download.Mp4_download(youtube_url)
+  return c.String(http.StatusOK, youtube_url)
 }
